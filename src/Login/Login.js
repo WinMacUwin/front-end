@@ -9,19 +9,30 @@ import { indigo } from "@mui/material/colors";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
+import { Form, useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 
 export default function Login() {
-  const [currentForm, setCurrentForm] = useState("signup");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const navigate = useNavigate();
+  
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Check if entered username and password match the static user's credentials
+    if (username === 'odedaram' && password === '123') {
+      setIsAuthenticated(true);
+      navigate('/DashBoard');
+      // redirect to home screen after successful authentication
+    } else {
+      alert('Invalid username or password');
+    }
   };
 
   return (
@@ -40,7 +51,7 @@ export default function Login() {
 
             Login
           </Typography>
-          <Box component="form" onSubmit={handleSubmit}>
+          {/* <Form component="form" onSubmit={handleSubmit}>
           
             <TextField
               className="textfield"
@@ -77,7 +88,28 @@ export default function Login() {
             >
               Login
             </Button>
-          </Box>
+          </Form> */}
+
+          {isAuthenticated ? (
+        <p>Welcome, Static User!</p>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <TextField
+            type="password"
+            label="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button type="submit" variant="contained">
+            Login
+          </Button>
+        </form>
+      )}
         </Box>
   );
 }
